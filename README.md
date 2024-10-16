@@ -22,7 +22,7 @@ J'ai modifié le fichier de configuration SSH pour permettre les connexions dist
 - **PasswordAuthentication no** : Idéal en production pour forcer l'utilisation de clés SSH.
 
 ### Générer une paire de clés SSH
-Utilisez la commande suivante pour générer une paire de clés SSH :
+J'ai utilisé la commande suivante pour générer une paire de clés SSH :
 
 ```bash
 ssh-keygen -t rsa -b 4096
