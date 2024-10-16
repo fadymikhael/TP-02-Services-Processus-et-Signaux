@@ -191,17 +191,35 @@ Pour afficher les processus en cours avec leur utilisation CPU et mémoire :
 ```bash
 ps -eo user,pid,%cpu,%mem,stat,start,time,command
 ```
+Cette commande affichera les informations suivantes :
+-	USER : Le nom de l'utilisateur propriétaire du processus.
+-	PID : Le numéro d'identification du processus.
+-	%CPU : Pourcentage d'utilisation du processeur.
+-	%MEM : Pourcentage d'utilisation de la mémoire.
+-	STAT : L'état du processus.
+-	START : Date et heure de démarrage du processus.
+-	TIME : Temps CPU total utilisé par le processus.
+-	COMMAND : La commande utilisée pour lancer le processus
 
 **Résultat** :
 ```bash
 USER         PID %CPU %MEM STAT  STARTED     TIME COMMAND
 root           1  0.4  0.3 Ss   19:19:12 00:00:01 /sbin/init
+root           1  0.0  0.3 Ss   14:07:03 00:00:01 /sbin/init
+root           2  0.0  0.0 S    14:07:03 00:00:00 [kthreadd]
+root           3  0.0  0.0 I<   14:07:03 00:00:00 [rcu_gp]
 root         556 66.6  0.1 R+   19:22:59 00:00:00 ps -eo user,pid,%cpu,%mem,stat,start,time,command
+root         857  0.0  0.0 I    16:38:58 00:00:00 [kworker/0:0]
+root         860  0.0  0.1 R+   16:41:44 00:00:00 ps -eo user,pid,%cpu,%mem,stat,start,time,command
+
 ```
 
 - **TIME** : Temps CPU total utilisé par le processus.
 - **Le processus utilisant le plus de CPU** : Le processus avec PID 556, la commande `ps`, a temporairement utilisé 66.6% du CPU.
 - **Premier processus lancé** : Le processus avec PID 1, `/sbin/init`, est le premier processus lancé lors du démarrage du système.
+   -  -e  : Affiche tous les processus.
+  - -o : Permet de spécifier quelles colonnes afficher (par exemple, USER, PID, etc.).
+  - --sort=-%cpu : Trie les processus par pourcentage d'utilisation du CPU, du plus élevé au plus faible.
 
 
 ### Affichage des ancêtres d'un processus
