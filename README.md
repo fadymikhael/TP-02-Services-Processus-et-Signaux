@@ -53,7 +53,7 @@ dhclient -r enp0s3    # Retirer l'adresse IP
 dhclient enp0s3       # Demander une nouvelle adresse IP
 ```
 
-**Résultat** : J'ai pu me reconnecter à la machine virtuelle depuis ma machine hôte.
+**Résultat** : J'ai pu me reconnecter à la machine virtuelle depuis ma machine hôte avec la nouvelle adresse IP.
 
 ---
 
