@@ -54,6 +54,132 @@ dhclient enp0s3       # Demander une nouvelle adresse IP
 ```
 
 **Résultat** : J'ai pu me reconnecter à la machine virtuelle depuis ma machine hôte avec la nouvelle adresse IP.
+## 1.2 Ne pas mettre de passphrase  
+ne pas meetre de passphrase, ce qui signifie que on peut  utiliser la clé privée pour se connecter sans avoir à entrer de mot de passe ou de passphrase à chaque fois. Cependant, dans un environnement réel, c’est une mauvaise idée, mais  pourquoi ?
+- **Sécurité** : Sans passphrase, si quelqu'un accède à votre fichier de clé privée, il pourra se connecter à vos serveurs sans aucune autre forme d'authentification.
+- **Bonne pratique** : Utiliser une passphrase ajoute une couche de sécurité supplémentaire. Même si la clé privée est compromise, la passphrase protège encore l'accès.
+Dans un environnement réel, il est recommandé d'utiliser une passphrase pour sécuriser la clé privée.
+
+```bash
+Enter same passphrase again:
+Your identification has been saved in /root/.ssh/id_rsa
+Your public key has been saved in /root/.ssh/id_rsa.pub
+The key fingerprint is:
+SHA256:JMXRku5****Smbg******* root@debian
+The key's randomart image is:
++---[RSA 4096]----+
+|   . . o+=       |
+|    o .o* .      |
+| . .  oo.+       |
+|  o    += .      |
+| o .  o+S+ . .   |
+|  o +++ = o o .  |
+|     =oB = = o   |
+|     .+.=.* +    |
+|    ..ooE o=     |
++----[SHA256]-----+
+```
+
+la clé. Par défaut, elle est enregistrée dans le fichier /root/.ssh/id_rsa (clé privée) et /root/.ssh/id_rsa.pub  (clé publique).
+
+# 1.3: Authentification par clef / Connexion au serveur
+
+### Vérification des répertoires SSH
+
+Pour vérifier si le répertoire SSH existe, utilisez la commande suivante :
+
+```bash
+ls -ld ~/.ssh
+```
+**Résultat** : 
+```bash
+drwx------ 2 root root 4096 Oct 11 14:54 /root/.ssh
+```
+Cela signifie que seul le propriétaire a les permissions de lecture, écriture, et exécution sur ce dossier.
+
+### Vérification du fichier `authorized_keys`
+
+Pour vérifier si le fichier `authorized_keys` existe :
+
+```bash
+ls -l /root/.ssh/authorized_keys
+```
+**Résultat** : 
+```bash
+-rw------- 1 root root 1472 Oct  9 23:14 /root/.ssh/authorized_keys
+```
+Seul le propriétaire a des permissions sur ce fichier.
+
+Vérifiez si la clé publique est présente dans `authorized_keys` :
+
+```bash
+nano /root/.ssh/authorized_keys
+```
+
+---
+
+## 1.4 Authentification par clef depuis la machine hôte
+
+Depuis la machine hôte, connectez-vous au serveur avec la clé privée :
+```bash
+ssh -i ~/.ssh/id_rsa root@172.20.10.6
+```
+**Résultat** : 
+```bash
+Linux debian 6.1.0-25-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.106-3 (2024-08-26) x86_64
+
+Last login: Fri Oct 11 14:21:09 2024 from 172.20.10.2
+```
+La connexion via SSH avec votre clé privée a réussi.
+
+---
+
+### Configuration du serveur SSH pour l'authentification par clé uniquement
+
+1. Modifiez le fichier de configuration SSH :
+
+```bash
+nano /etc/ssh/sshd_config
+```
+2. Modifiez les lignes suivantes :
+```bash
+PermitRootLogin prohibit-password
+PasswordAuthentication no
+```
+
+Cela permet de renforcer la sécurité en interdisant les connexions avec mot de passe.
+
+---
+
+## Protection contre les attaques par brute force SSH
+
+### Explication des attaques par brute force
+
+Une attaque brute-force consiste à deviner le mot de passe en essayant de nombreuses combinaisons. Cela peut compromettre la sécurité, surtout si des mots de passe faibles sont utilisés.
+
+### Techniques de protection
+
+1. **Configurer un pare-feu (Firewall)** : Restreindre l'accès au port SSH (par défaut 22) en autorisant uniquement certaines adresses IP.
+   - **Avantage** : Restreint considérablement l'exposition du port SSH.
+   - **Inconvénient** : Limite la mobilité.
+
+2. **Changer le port SSH** : Par défaut, SSH utilise le port 22. Vous pouvez changer ce port en modifiant `sshd_config`.
+   ```bash
+   Port 2222
+   ```
+
+3. **Utiliser `fail2ban`** : Outil qui bloque les adresses IP après un nombre d'échecs de connexion.
+   - **Installation** : 
+   ```bash
+   apt-get install fail2ban
+   ```
+   - **Avantage** : Protège contre les tentatives de brute-force.
+
+4. **Désactiver l'accès root direct** : Limiter l'accès direct à root via SSH.
+   ```bash
+   PermitRootLogin no
+   ```
+
 
 ---
 
