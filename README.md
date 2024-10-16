@@ -44,7 +44,7 @@ Pour copier la clé publique vers le serveur, utilisez la commande :
 ssh-copy-id root@10.0.2.15
 ```
 
-### Résolution des problèmes de connexion
+### Résolution des problèmes de connexion ( mon cas )
 
 Lorsque j'ai redémarré la machine virtuelle, j'étais en mode NAT et la connexion a échoué. Voici ce que j'ai fait pour résoudre ce problème :
 
